@@ -3,6 +3,7 @@ package com.nixon.cinema.service.impl;
 import com.nixon.cinema.dto.request.UserRequestDTO;
 import com.nixon.cinema.dto.request.UserUpdateRequestDTO;
 import com.nixon.cinema.dto.response.UserResponseDTO;
+import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.User;
 import com.nixon.cinema.model.enums.Role;
 import com.nixon.cinema.repository.UserRepository;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO myProfile() {
-        return null;
+        throw new EntityNotFoundException("User not found");
     }
 
     @Override
