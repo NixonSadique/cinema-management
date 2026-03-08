@@ -9,6 +9,11 @@ import com.nixon.cinema.model.enums.Role;
 import com.nixon.cinema.repository.UserRepository;
 import com.nixon.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +42,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createManager(UserRequestDTO request) {
-        return "";
+        User user = new User();
+        user.setUsername(request.username());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPhone(request.phone());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email().toLowerCase());
+        user.setRole(Role.MANAGER);
+        userRepo.save(user);
+        return "New Manager Created!";
     }
 
     @Override
@@ -47,21 +61,53 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String updateUser(UserUpdateRequestDTO request) {
+
         return "";
     }
 
     @Override
     public List<UserResponseDTO> getAllUsers() {
-        return List.of();
+        return userRepo.findAll().stream().map(
+                user -> new UserResponseDTO(
+                        user.getUsername(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole()
+                )
+        ).toList();
     }
 
     @Override
     public UserResponseDTO myProfile() {
-        throw new EntityNotFoundException("User not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() != null) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            User user = userRepo.findByUsername(username).orElseThrow();
+            return new UserResponseDTO(
+                    user.getUsername(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getRole()
+            );
+        }
+
+        throw new AuthenticationCredentialsNotFoundException("User not found");
     }
 
     @Override
     public UserResponseDTO getUserByUsername(String username) {
-        return null;
+        User user = userRepo.findByUsername(username).orElseThrow(
+                () -> new EntityNotFoundException("User not found")
+        );
+        return new UserResponseDTO(
+                user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }

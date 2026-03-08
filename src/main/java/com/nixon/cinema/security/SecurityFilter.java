@@ -26,6 +26,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
+
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -51,6 +52,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(securityContext);
             }
         }
-
+        filterChain.doFilter(request, response);
     }
 }

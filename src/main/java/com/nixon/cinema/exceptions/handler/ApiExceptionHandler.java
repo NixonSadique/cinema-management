@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.OffsetDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<StandardErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
         StandardErrorResponse response = new StandardErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
@@ -28,6 +30,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardErrorResponse> handleBadRequestException(BadRequestException ex, HttpServletRequest request) {
         StandardErrorResponse response = new StandardErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
@@ -40,6 +43,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<StandardErrorResponse> handleException(Exception ex, HttpServletRequest request) {
         StandardErrorResponse response = new StandardErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -52,6 +56,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         StandardErrorResponse response = new StandardErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
