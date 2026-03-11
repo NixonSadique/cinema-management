@@ -41,7 +41,8 @@ public class SecurityConfiguration {
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/auth/**",
-                                        "/cinema/v1/user/default"
+                                        "/cinema/v1/user/default",
+                                        "/h2-console/**"
                                 ).permitAll()
                                 .requestMatchers("/user/*").hasRole("ADMIN")
                                 .anyRequest().authenticated())
