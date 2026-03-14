@@ -12,7 +12,12 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_ticket")
+@Table(
+        name = "tb_ticket",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"seat_id", "showtime_id"}
+        )
+)
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -21,6 +21,8 @@ public class Showtime {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    private Boolean active;
+
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;

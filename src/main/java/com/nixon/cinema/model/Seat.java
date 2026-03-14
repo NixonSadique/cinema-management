@@ -18,7 +18,7 @@ public class Seat {
     private Long id;
 
     @Column(nullable = false)
-    private String row;
+    private String seatRow;
 
     @Column(nullable = false)
     private Integer seatNumber;

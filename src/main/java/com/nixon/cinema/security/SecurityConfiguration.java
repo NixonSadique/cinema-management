@@ -46,8 +46,8 @@ public class SecurityConfiguration {
                                 ).permitAll()
                                 .requestMatchers("/user/*").hasRole("ADMIN")
                                 .anyRequest().authenticated())
-                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider)
                 .sessionManagement(sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(STATELESS))
                 .build();
     }
