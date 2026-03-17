@@ -1,4 +1,8 @@
 package com.nixon.cinema.dto.response;
 
-public record RoomResponseDTO() {
+import com.nixon.cinema.model.enums.RoomType;
+
+import java.util.List;
+
+public record RoomResponseDTO(Long id, String name, RoomType roomType, List<SeatResponseForRoomDTO> seats) {
 }
