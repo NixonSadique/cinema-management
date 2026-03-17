@@ -28,24 +28,25 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final AuthenticationProvider  authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
     private final SecurityFilter securityFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers(POST,"/user/default").permitAll()
-                                .requestMatchers(
-                                        "/v3/api-docs",
-                                        "/v3/api-docs/**",
-                                        "/swagger-ui/**",
-                                        "/auth/**",
-                                        "/cinema/v1/user/default",
-                                        "/h2-console/**"
-                                ).permitAll()
-                                .requestMatchers("/user/*").hasRole("ADMIN")
-                                .anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(POST, "/user/default").permitAll()
+                        .requestMatchers(POST, "/cinema/v1/user/default").permitAll()
+                        .requestMatchers(POST, "/auth/**").permitAll()
+                        .requestMatchers("/user/*").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/h2-console/**"
+                        ).permitAll()
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .sessionManagement(sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(STATELESS))
@@ -57,7 +58,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setMaxAge(3200L);
         configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of(
@@ -67,7 +68,7 @@ public class SecurityConfiguration {
                 "Access-Control-Allow-Credentials"
         ));
 
-        UrlBasedCorsConfigurationSource  source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

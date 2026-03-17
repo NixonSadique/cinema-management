@@ -1,5 +1,6 @@
 package com.nixon.cinema.model;
 
+import com.nixon.cinema.model.enums.PurchaseStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,8 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_purchase")
@@ -22,6 +24,9 @@ public class Purchase {
 
     @Column(nullable = false)
     private Double price;
+
+    @Enumerated(EnumType.STRING)
+    private PurchaseStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
