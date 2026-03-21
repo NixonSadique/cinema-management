@@ -4,7 +4,7 @@ import com.nixon.cinema.dto.request.PurchaseRequestDTO;
 import com.nixon.cinema.dto.response.PurchaseResponseDTO;
 
 public interface PurchaseService {
-    PurchaseResponseDTO makePurchase(PurchaseRequestDTO request);
+    PurchaseResponseDTO startPurchase(PurchaseRequestDTO request);
 
     String cancelPurchase(Long purchaseId);
 

@@ -34,7 +34,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final UserRepository userRepository;
 
     @Override
-    public PurchaseResponseDTO makePurchase(PurchaseRequestDTO request) {
+    public PurchaseResponseDTO startPurchase(PurchaseRequestDTO request) {
         Purchase purchase = new Purchase();
         purchase.setDescription(request.description());
 
@@ -124,6 +124,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         );
 
         purchase.setStatus(PurchaseStatus.COMPLETED);
+
+        purchaseRepository.save(purchase);
 
 
         return new PurchaseResponseDTO(purchase.getId(), purchase.getPrice(), PurchaseStatus.COMPLETED, purchase.getTickets().stream().map(
