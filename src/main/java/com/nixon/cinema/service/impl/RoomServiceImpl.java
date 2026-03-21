@@ -49,13 +49,14 @@ public class RoomServiceImpl implements RoomService {
             seats.add(seat);
         }
 
+        rawRoom.setSeat(seats);
         Room savedRoom = roomRepository.save(rawRoom);
 
         System.out.println(savedRoom);
 
         return Optional.of(savedRoom).map(
                 r -> new RoomResponseDTO(r.getId(), r.getName(), r.getRoomType(), r.getSeat().stream().map(
-                        seat -> new SeatResponseForRoomDTO(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
+                        seat -> new SeatResponseForRoomDTO(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
                 ).toList())
         ).orElseThrow(
                 () -> new BadRequestException("Room could not be saved")

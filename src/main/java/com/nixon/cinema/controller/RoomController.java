@@ -5,6 +5,7 @@ import com.nixon.cinema.dto.response.RoomResponseDTO;
 import com.nixon.cinema.model.enums.RoomType;
 import com.nixon.cinema.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +23,7 @@ import java.util.List;
 public class RoomController {
     private final RoomService roomService;
 
-    @PostMapping("/create/")
+    @PostMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Create Room",
@@ -48,7 +49,7 @@ public class RoomController {
                     )
             }
     )
-    @GetMapping("/get/{name}")
+    @GetMapping(value = "/{name}")
     ResponseEntity<RoomResponseDTO> getRoom(@PathVariable String name) {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
@@ -63,7 +64,7 @@ public class RoomController {
                     )
             }
     )
-    @GetMapping("/get/{type}")
+    @GetMapping("/room/{type}")
     ResponseEntity<List<RoomResponseDTO>> getRoomByType(@PathVariable RoomType type) {
         return ResponseEntity.ok(roomService.getRoomByType(type));
     }

@@ -19,14 +19,18 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * This is a TEMPORARY ENDPOINT, to be removed!
+     *
+     */
     @PostMapping("/default")
     ResponseEntity<String> defaultUser() {
-        return  new ResponseEntity<>(userService.createDefaultAdmin(), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.createDefaultAdmin(), HttpStatus.CREATED);
     }
 
     @PostMapping("/create/manager")
     ResponseEntity<String> createManager(@RequestBody UserRequestDTO request) {
-        return new  ResponseEntity<>(userService.createManager(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.createManager(request), HttpStatus.CREATED);
     }
 
     @PostMapping("/create/user")
@@ -45,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{username}")
-    ResponseEntity<UserResponseDTO> getUser(@PathVariable @Size(min =6, max = 20) String username) {
+    ResponseEntity<UserResponseDTO> getUser(@PathVariable @Size(min = 6, max = 20) String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
