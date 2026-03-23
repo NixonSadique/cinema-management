@@ -1,8 +1,8 @@
 package com.nixon.cinema.service.impl;
 
-import com.nixon.cinema.dto.request.RoomCreationRequestDTO;
-import com.nixon.cinema.dto.response.RoomResponseDTO;
-import com.nixon.cinema.dto.response.SeatResponseForRoomDTO;
+import com.nixon.cinema.dto.request.RoomCreationRequest;
+import com.nixon.cinema.dto.response.RoomResponse;
+import com.nixon.cinema.dto.response.SeatResponseForRoom;
 import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.Room;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +23,20 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
 
     @Override
-    public RoomResponseDTO createRoom(RoomCreationRequestDTO request) {
+    public RoomResponse createRoom(RoomCreationRequest request) {
         char row = 'A';
         int seatNum = 0;
+
+        if (roomRepository.findByName(request.name()).isPresent()) {
+            throw new BadRequestException("Room already exists");
+        }
+
         Room rawRoom = new Room();
         rawRoom.setName(request.name());
         rawRoom.setRoomType(request.type() != null ? request.type() : RoomType.ROOM_2D);
+
         List<Seat> seats = new ArrayList<>();
+
         for (int i = 0; i < request.capacity(); i++) {
             if ((i != 0) && (i % request.columnNumber() == 0)) {
                 row++;
@@ -54,20 +60,19 @@ public class RoomServiceImpl implements RoomService {
 
         System.out.println(savedRoom);
 
-        return Optional.of(savedRoom).map(
-                r -> new RoomResponseDTO(r.getId(), r.getName(), r.getRoomType(), r.getSeat().stream().map(
-                        seat -> new SeatResponseForRoomDTO(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
-                ).toList())
-        ).orElseThrow(
-                () -> new BadRequestException("Room could not be saved")
-        );
+        return new RoomResponse(savedRoom.getId(),
+                savedRoom.getName(),
+                savedRoom.getRoomType(),
+                savedRoom.getSeat().stream().map(
+                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
+                ).toList());
     }
 
     @Override
-    public RoomResponseDTO getRoomByName(String name) {
+    public RoomResponse getRoomByName(String name) {
         return roomRepository.findByName(name).map(
-                room -> new RoomResponseDTO(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
-                        seat -> new SeatResponseForRoomDTO(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
+                room -> new RoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
+                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
                 ).toList())
         ).orElseThrow(
                 () -> new EntityNotFoundException("Room with name " + name + " not found")
@@ -75,10 +80,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomResponseDTO> getRoomByType(RoomType type) {
+    public List<RoomResponse> getRoomByType(RoomType type) {
         return roomRepository.findAllByRoomType(type).stream().map(
-                room -> new RoomResponseDTO(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
-                        seat -> new SeatResponseForRoomDTO(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
+                room -> new RoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
+                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
                 ).toList())
         ).toList();
     }

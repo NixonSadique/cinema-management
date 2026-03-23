@@ -1,7 +1,7 @@
 package com.nixon.cinema.controller;
 
-import com.nixon.cinema.dto.request.ShowtimeCreationRequestDTO;
-import com.nixon.cinema.dto.response.ShowtimeResponseDTO;
+import com.nixon.cinema.dto.request.ShowtimeCreationRequest;
+import com.nixon.cinema.dto.response.ShowtimeResponse;
 import com.nixon.cinema.service.ShowtimeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,50 +13,52 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cinema/v1/showtime")
+@RequestMapping("/cinema/v1")
 @RequiredArgsConstructor
 @Tag(name = "5.Showtime Controller", description = "Contains the endpoints for the Showtimes")
 public class ShowtimeController {
 
     private final ShowtimeService service;
 
-    @PostMapping("/")
-    ResponseEntity<String> createShowtimes(@RequestBody ShowtimeCreationRequestDTO request) {
+    @PostMapping("/showtimes")
+    ResponseEntity<String> createShowtimes(@RequestBody ShowtimeCreationRequest request) {
         return new ResponseEntity<>(service.createShowtimesForMovie(request), HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimes() {
+    @GetMapping("/showtimes")
+    ResponseEntity<List<ShowtimeResponse>> getAllShowtimes() {
         return ResponseEntity.ok(service.getAllShowTimes());
     }
 
-    @GetMapping("/active/")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllActiveShowtimes() {
+    @GetMapping("/showtimes/active")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimes() {
         return ResponseEntity.ok(service.getAllActiveShowTimes());
     }
 
-    @GetMapping("/{id}/movie/")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimesWithMovieId(@PathVariable Long movieId) {
-        return ResponseEntity.ok(service.getAllByMovieId(movieId));
+    @GetMapping(value = "showtimes/active{roomId}")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithRoomId(@RequestParam Long id) {
+        return ResponseEntity.ok(service.getByActiveTrueAndRoomId(id));
     }
 
-    @GetMapping("/time/")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimesWithStartTime(@RequestParam LocalDateTime startTime) {
-        return ResponseEntity.ok(service.getAllByStartTime(startTime));
-    }
-
-    @GetMapping("/{id}/room")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimesWithRoomId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getAllByRoomId(id));
-    }
-
-    @GetMapping("/active/time")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllActiveShowtimesWithStartTime(@RequestParam LocalDateTime startTime) {
+    @GetMapping("/showtimes/active{startTime}")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithStartTime(@RequestParam LocalDateTime startTime) {
         return ResponseEntity.ok(service.getByActiveTrueAndStartTime(startTime));
     }
 
-    @GetMapping(value = "/active/{id}/room")
-    ResponseEntity<List<ShowtimeResponseDTO>> getAllActiveShowtimesWithRoomId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getByActiveTrueAndRoomId(id));
+    @GetMapping("/showtimes{movieId}")
+    ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithMovieId(@RequestParam Long movieId) {
+        return ResponseEntity.ok(service.getAllByMovieId(movieId));
     }
+
+    @GetMapping("/showtimes/start/{startTime}")
+    ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithStartTime(@PathVariable LocalDateTime startTime) {
+        return ResponseEntity.ok(service.getAllByStartTime(startTime));
+    }
+
+    @GetMapping("/showtimes/room/{roomId}")
+    ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithRoomId(@PathVariable Long roomId) {
+        return ResponseEntity.ok(service.getAllByRoomId(roomId));
+    }
+
+
 }

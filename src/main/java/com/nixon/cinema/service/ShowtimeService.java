@@ -1,26 +1,26 @@
 package com.nixon.cinema.service;
 
-import com.nixon.cinema.dto.request.ShowtimeCreationRequestDTO;
-import com.nixon.cinema.dto.response.ShowtimeResponseDTO;
+import com.nixon.cinema.dto.request.ShowtimeCreationRequest;
+import com.nixon.cinema.dto.response.ShowtimeResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ShowtimeService {
-    String createShowtimesForMovie(ShowtimeCreationRequestDTO request);
+    String createShowtimesForMovie(ShowtimeCreationRequest request);
 
-    List<ShowtimeResponseDTO> getAllShowTimes();
+    List<ShowtimeResponse> getAllShowTimes();
 
-    List<ShowtimeResponseDTO> getAllActiveShowTimes();
+    List<ShowtimeResponse> getAllActiveShowTimes();
 
-    List<ShowtimeResponseDTO> getAllByMovieId(Long id);
+    List<ShowtimeResponse> getAllByMovieId(Long id);
 
-    List<ShowtimeResponseDTO> getAllByStartTime(LocalDateTime startTime);
+    List<ShowtimeResponse> getAllByStartTime(LocalDateTime startTime);
 
-    List<ShowtimeResponseDTO> getAllByRoomId(Long id);
+    List<ShowtimeResponse> getAllByRoomId(Long id);
 
-    List<ShowtimeResponseDTO> getByActiveTrueAndStartTime(LocalDateTime startTime);
+    List<ShowtimeResponse> getByActiveTrueAndStartTime(LocalDateTime startTime);
 
-    List<ShowtimeResponseDTO> getByActiveTrueAndRoomId(Long id);
+    List<ShowtimeResponse> getByActiveTrueAndRoomId(Long id);
 
 }

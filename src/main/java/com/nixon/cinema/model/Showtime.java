@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Table(name = "tb_showtime")
 public class Showtime {
     @Id
@@ -22,6 +23,8 @@ public class Showtime {
     private LocalDateTime endTime;
 
     private Boolean active;
+
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "movie_id")

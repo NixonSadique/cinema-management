@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/h2-console/**"
                         ).permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .sessionManagement(sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(STATELESS))

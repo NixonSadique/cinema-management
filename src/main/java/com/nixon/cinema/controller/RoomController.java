@@ -1,11 +1,10 @@
 package com.nixon.cinema.controller;
 
-import com.nixon.cinema.dto.request.RoomCreationRequestDTO;
-import com.nixon.cinema.dto.response.RoomResponseDTO;
+import com.nixon.cinema.dto.request.RoomCreationRequest;
+import com.nixon.cinema.dto.response.RoomResponse;
 import com.nixon.cinema.model.enums.RoomType;
 import com.nixon.cinema.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,54 +19,53 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cinema/v1/room")
+@RequestMapping("/cinema/v1")
 @Tag(name = "7.Room Controller", description = "Contains the endpoints for the Rooms!")
 public class RoomController {
     private final RoomService roomService;
 
-    @PostMapping("/")
+    @PostMapping("/rooms")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Create Room",
             description = "Creates a new room, based on the capacity chosen and the number of columns.",
             method = "POST",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Room Created",
-                            content = @Content(schema = @Schema(implementation = RoomResponseDTO.class))
-                    )
+                    @ApiResponse(responseCode = "201", description = "Room Created"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request")
             }
     )
-    ResponseEntity<RoomResponseDTO> createRoom(@RequestBody RoomCreationRequestDTO request) {
+    ResponseEntity<RoomResponse> createRoom(@RequestBody RoomCreationRequest request) {
         return new ResponseEntity<>(roomService.createRoom(request), HttpStatus.CREATED);
     }
 
+    @GetMapping("/rooms/{name}")
     @Operation(
             summary = "Retrieves a room",
             description = "Retrieves a room given the name of the room!",
             method = "GET",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Room Not Found",
-                            content = @Content(schema = @Schema(implementation = RoomResponseDTO.class))
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(schema = @Schema(implementation = RoomResponse.class))
                     )
             }
     )
-    @GetMapping(value = "/{name}")
-    ResponseEntity<RoomResponseDTO> getRoom(@PathVariable String name) {
+    ResponseEntity<RoomResponse> getRoom(@PathVariable String name) {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
 
+    @GetMapping("/rooms/{type}")
     @Operation(
             summary = "Retrieves a room",
             description = "Retrieves a room given the name of the room!",
             method = "GET",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Room Not Found",
-                            content = @Content(schema = @Schema(implementation = RoomResponseDTO.class))
+                            content = @Content(schema = @Schema(implementation = RoomResponse.class))
                     )
             }
     )
-    @GetMapping("/room/{type}")
-    ResponseEntity<List<RoomResponseDTO>> getRoomByType(@PathVariable RoomType type) {
+    ResponseEntity<List<RoomResponse>> getRoomByType(@PathVariable RoomType type) {
         return ResponseEntity.ok(roomService.getRoomByType(type));
     }
 

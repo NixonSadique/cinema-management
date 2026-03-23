@@ -1,16 +1,15 @@
 package com.nixon.cinema.service.impl;
 
-import com.nixon.cinema.dto.request.UserRequestDTO;
-import com.nixon.cinema.dto.request.UserUpdateRequestDTO;
-import com.nixon.cinema.dto.response.UserResponseDTO;
+import com.nixon.cinema.dto.request.UserRequest;
+import com.nixon.cinema.dto.request.UserUpdateRequest;
+import com.nixon.cinema.dto.response.UserResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.User;
 import com.nixon.cinema.model.enums.Role;
 import com.nixon.cinema.repository.UserRepository;
 import com.nixon.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +40,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String createManager(UserRequestDTO request) {
+    public String createManager(UserRequest request) {
+        var usernameExists = userRepo.existsByUsername(request.username());
+        var emailExists = userRepo.existsByEmail(request.email());
+        var message = "There is already a user with ";
+        if (usernameExists) {
+            message = message.concat("the chosen username");
+        }
+        if (emailExists) {
+            message = message.concat("the chosen email");
+        }
+
+        if (usernameExists || emailExists) {
+            throw new BadRequestException(message);
+        }
+
         User user = new User();
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -55,20 +68,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String createUser(UserRequestDTO request) {
-        return "";
+    public String createUser(UserRequest request) {
+
+        var usernameExists = userRepo.existsByUsername(request.username());
+        var emailExists = userRepo.existsByEmail(request.email());
+
+        if (usernameExists || emailExists) throw new BadRequestException("The chosen Email or Username already exists");
+
+        User user = new User();
+        user.setUsername(request.username());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPhone(request.phone());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email().toLowerCase());
+        user.setRole(Role.USER);
+        userRepo.save(user);
+
+        return "User saved successfully!";
     }
 
     @Override
-    public String updateUser(UserUpdateRequestDTO request) {
-
-        return "";
+    public String updateUser(UserUpdateRequest request) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<UserResponseDTO> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userRepo.findAll().stream().map(
-                user -> new UserResponseDTO(
+                user -> new UserResponse(
                         user.getUsername(),
                         user.getFirstName(),
                         user.getLastName(),
@@ -79,13 +107,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO myProfile() {
+    public UserResponse myProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
             User user = userRepo.findByUsername(username).orElseThrow();
-            return new UserResponseDTO(
+            return new UserResponse(
                     user.getUsername(),
                     user.getFirstName(),
                     user.getLastName(),
@@ -94,15 +122,15 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        throw new AuthenticationCredentialsNotFoundException("User not found");
+        throw new EntityNotFoundException("User not found!");
     }
 
     @Override
-    public UserResponseDTO getUserByUsername(String username) {
+    public UserResponse getUserByUsername(String username) {
         User user = userRepo.findByUsername(username).orElseThrow(
                 () -> new EntityNotFoundException("User not found")
         );
-        return new UserResponseDTO(
+        return new UserResponse(
                 user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),

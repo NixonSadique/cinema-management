@@ -1,13 +1,13 @@
 package com.nixon.cinema.service;
 
-import com.nixon.cinema.dto.request.PurchaseRequestDTO;
-import com.nixon.cinema.dto.response.PurchaseResponseDTO;
+import com.nixon.cinema.dto.request.PurchaseRequest;
+import com.nixon.cinema.dto.response.PurchaseResponse;
 
 public interface PurchaseService {
-    PurchaseResponseDTO startPurchase(PurchaseRequestDTO request);
+    PurchaseResponse startPurchase(PurchaseRequest request);
 
     String cancelPurchase(Long purchaseId);
 
-    PurchaseResponseDTO confirmPurchase(Long purchaseId);
+    PurchaseResponse confirmPurchase(Long purchaseId);
 
 }

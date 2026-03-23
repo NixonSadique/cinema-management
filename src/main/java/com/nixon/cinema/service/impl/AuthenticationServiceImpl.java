@@ -1,6 +1,6 @@
 package com.nixon.cinema.service.impl;
 
-import com.nixon.cinema.dto.request.AuthenticationRequestDTO;
+import com.nixon.cinema.dto.request.AuthenticationRequest;
 import com.nixon.cinema.dto.response.TokenResponse;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.User;
@@ -21,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
 
     @Override
-    public TokenResponse login(AuthenticationRequestDTO request) {
+    public TokenResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
@@ -29,8 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = repository.findByUsername(request.username()).orElseThrow(
                 () -> new EntityNotFoundException("Username not found")
         );
-
-
 
         return jwtService.generateToken(user);
     }

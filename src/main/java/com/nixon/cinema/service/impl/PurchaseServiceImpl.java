@@ -1,14 +1,12 @@
 package com.nixon.cinema.service.impl;
 
-import com.nixon.cinema.dto.request.PurchaseRequestDTO;
-import com.nixon.cinema.dto.response.PurchaseResponseDTO;
-import com.nixon.cinema.dto.response.TicketResponseDTO;
-import com.nixon.cinema.dto.response.UserResponseDTO;
-import com.nixon.cinema.exceptions.BadRequestException;
+import com.nixon.cinema.dto.request.PurchaseRequest;
+import com.nixon.cinema.dto.response.PurchaseResponse;
+import com.nixon.cinema.dto.response.TicketResponse;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
+import com.nixon.cinema.exceptions.SeatAlreadyBookedException;
 import com.nixon.cinema.model.*;
 import com.nixon.cinema.model.enums.PurchaseStatus;
-import com.nixon.cinema.model.enums.RoomType;
 import com.nixon.cinema.repository.*;
 import com.nixon.cinema.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final UserRepository userRepository;
 
     @Override
-    public PurchaseResponseDTO startPurchase(PurchaseRequestDTO request) {
+    public PurchaseResponse startPurchase(PurchaseRequest request) {
         Purchase purchase = new Purchase();
         purchase.setDescription(request.description());
 
@@ -50,9 +48,9 @@ public class PurchaseServiceImpl implements PurchaseService {
             );
 
             if (ticketRepository.existsBySeatIdAndShowtimeId(seat.getId(), showtime.getId()))
-                throw new BadRequestException("Seat is occupied already!"); //Make a dedicated Exception for this use case(SeatOccupied)
+                throw new SeatAlreadyBookedException("Seat is Occupied, choose another!");
 
-            Ticket ticket = getTicket(seat, showtime, purchase);
+            Ticket ticket = buildTicket(seat, showtime, purchase);
             price += ticket.getUnitPrice();
             tickets.add(ticket);
         }
@@ -63,8 +61,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setUser(getLoggedUser());
         var savedPurchase = purchaseRepository.save(purchase);
 
-        return new PurchaseResponseDTO(savedPurchase.getId(), savedPurchase.getPrice(), PurchaseStatus.PENDING, tickets.stream().map(
-                ticket -> new TicketResponseDTO()
+        return new PurchaseResponse(savedPurchase.getId(), savedPurchase.getPrice(), PurchaseStatus.PENDING, tickets.stream().map(
+                ticket -> new TicketResponse(ticket.getId(),
+                        ticket.getUnitPrice(),
+                        ticket.getSeat().getSeatRow() + ticket.getSeat().getSeatNumber())
         ).toList());
     }
 
@@ -80,10 +80,10 @@ public class PurchaseServiceImpl implements PurchaseService {
             return userRepository.findByUsername(username).orElseThrow();
         }
 
-        throw new AuthenticationCredentialsNotFoundException("User not found");
+        throw new EntityNotFoundException("User not found");
     }
 
-    private @NonNull Ticket getTicket(Seat seat, Showtime showtime, Purchase purchase) {
+    private @NonNull Ticket buildTicket(Seat seat, Showtime showtime, Purchase purchase) {
 
         Ticket ticket = new Ticket();
 
@@ -91,15 +91,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         ticket.setPurchaseTime(LocalDateTime.now());
         ticket.setSeat(seat);
         ticket.setShowtime(showtime);
-
-
-        switch (showtime.getRoom().getRoomType()) {
-            case RoomType.ROOM_2D -> ticket.setUnitPrice(500.0);
-            case RoomType.ROOM_3D -> ticket.setUnitPrice(650.0);
-            case ROOM_4DX -> ticket.setUnitPrice(2500.0);
-            case ROOM_IMAX, ROOM_DOLBY_CINEMA -> ticket.setUnitPrice(1000.0);
-            case null, default -> throw new BadRequestException("Invalid Room Type");
-        }
+        ticket.setUnitPrice(showtime.getPrice());
 
         return ticket;
     }
@@ -118,7 +110,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public PurchaseResponseDTO confirmPurchase(Long purchaseId) {
+    public PurchaseResponse confirmPurchase(Long purchaseId) {
         var purchase = purchaseRepository.findById(purchaseId).orElseThrow(
                 () -> new EntityNotFoundException("Purchase Not Found!")
         );
@@ -127,9 +119,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         purchaseRepository.save(purchase);
 
-
-        return new PurchaseResponseDTO(purchase.getId(), purchase.getPrice(), PurchaseStatus.COMPLETED, purchase.getTickets().stream().map(
-                ticket -> new TicketResponseDTO()
+        return new PurchaseResponse(purchase.getId(), purchase.getPrice(), PurchaseStatus.COMPLETED, purchase.getTickets().stream().map(
+                ticket -> new TicketResponse(ticket.getId(),
+                        ticket.getUnitPrice(),
+                        ticket.getSeat().getSeatRow() + ticket.getSeat().getSeatNumber()
+                )
         ).toList());
     }
 }

@@ -1,20 +1,20 @@
 package com.nixon.cinema.service;
 
-import com.nixon.cinema.dto.response.TicketResponseDTO;
+import com.nixon.cinema.dto.response.TicketResponse;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface TicketService {
-    List<TicketResponseDTO> getTicketByPurchaseId(Long purchaseId);
+    List<TicketResponse> getTicketByPurchaseId(Long purchaseId);
 
-    List<TicketResponseDTO> getTicketBySeatIdAndShowtimeId(Long seatId, Long showtimeId);
+    List<TicketResponse> getTicketBySeatIdAndShowtimeId(Long seatId, Long showtimeId);
 
-    List<TicketResponseDTO> getAllTickets();
+    List<TicketResponse> getAllTickets();
 
-    TicketResponseDTO getTicketById(Long ticketId);
+    TicketResponse getTicketById(Long ticketId);
 
-    List<TicketResponseDTO> getAllTicketsByDate(LocalDate date);
+    List<TicketResponse> getAllTicketsByDate(LocalDate date);
 
 
 }

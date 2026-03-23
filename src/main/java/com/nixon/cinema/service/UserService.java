@@ -1,8 +1,8 @@
 package com.nixon.cinema.service;
 
-import com.nixon.cinema.dto.request.UserRequestDTO;
-import com.nixon.cinema.dto.request.UserUpdateRequestDTO;
-import com.nixon.cinema.dto.response.UserResponseDTO;
+import com.nixon.cinema.dto.request.UserRequest;
+import com.nixon.cinema.dto.request.UserUpdateRequest;
+import com.nixon.cinema.dto.response.UserResponse;
 
 import java.util.List;
 
@@ -10,17 +10,17 @@ public interface UserService {
 
     String createDefaultAdmin();
 
-    String createManager(UserRequestDTO request);
+    String createManager(UserRequest request);
 
-    String createUser(UserRequestDTO request);
+    String createUser(UserRequest request);
 
-    String updateUser(UserUpdateRequestDTO request);
+    String updateUser(UserUpdateRequest request);
 
-    List<UserResponseDTO> getAllUsers();
+    List<UserResponse> getAllUsers();
 
-    UserResponseDTO myProfile();
+    UserResponse myProfile();
 
-    UserResponseDTO getUserByUsername(String username);
+    UserResponse getUserByUsername(String username);
 
 
 }

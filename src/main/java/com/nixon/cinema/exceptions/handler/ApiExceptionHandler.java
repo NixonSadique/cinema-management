@@ -2,6 +2,7 @@ package com.nixon.cinema.exceptions.handler;
 
 import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
+import com.nixon.cinema.exceptions.SeatAlreadyBookedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,19 @@ public class ApiExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardErrorResponse> handleBadRequestException(BadRequestException ex, HttpServletRequest request) {
+        StandardErrorResponse response = new StandardErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                OffsetDateTime.now(),
+                request.getServletPath(),
+                ex.getMessage(),
+                List.of()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SeatAlreadyBookedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<StandardErrorResponse> handleSeatAlreadyBooked(SeatAlreadyBookedException ex, HttpServletRequest request) {
         StandardErrorResponse response = new StandardErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 OffsetDateTime.now(),
