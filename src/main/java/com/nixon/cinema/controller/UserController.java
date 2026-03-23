@@ -4,6 +4,7 @@ import com.nixon.cinema.dto.request.UserRequestDTO;
 import com.nixon.cinema.dto.request.UserUpdateRequestDTO;
 import com.nixon.cinema.dto.response.UserResponseDTO;
 import com.nixon.cinema.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("cinema/v1/user")
 @RequiredArgsConstructor
+@Tag(name = "2.User Controller", description = "Endpoints for managing users, including creation, retrieval, update, and deletion")
 public class UserController {
 
     private final UserService userService;

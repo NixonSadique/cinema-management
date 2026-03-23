@@ -4,6 +4,7 @@ import com.nixon.cinema.dto.request.PurchaseRequestDTO;
 import com.nixon.cinema.dto.response.PurchaseResponseDTO;
 import com.nixon.cinema.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cinema/v1/purchase")
+@Tag(name = "3.Purchase Controller", description = "Contains the endpoints for the purchases, including creation, cancelation, and confirmation!")
 public class PurchaseController {
 
     private final PurchaseService service;
@@ -38,6 +40,4 @@ public class PurchaseController {
     ResponseEntity<String> cancelPurchase(@PathVariable Long purchaseId) {
         return new ResponseEntity<>(service.cancelPurchase(purchaseId), OK);
     }
-
-
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter @Service
+@Getter
+@Setter
+@Service
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tb_movie")
@@ -25,6 +28,9 @@ public class Movie {
 
     @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    private int duration;
 
     private LocalDateTime releaseDate;
 

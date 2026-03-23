@@ -3,6 +3,7 @@ package com.nixon.cinema.controller;
 import com.nixon.cinema.dto.request.ShowtimeCreationRequestDTO;
 import com.nixon.cinema.dto.response.ShowtimeResponseDTO;
 import com.nixon.cinema.service.ShowtimeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cinema/v1/showtime")
 @RequiredArgsConstructor
+@Tag(name = "5.Showtime Controller", description = "Contains the endpoints for the Showtimes")
 public class ShowtimeController {
 
     private final ShowtimeService service;

@@ -2,6 +2,7 @@ package com.nixon.cinema.controller;
 
 import com.nixon.cinema.dto.response.TicketResponseDTO;
 import com.nixon.cinema.service.TicketService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cinema/v1/ticket")
+@Tag(name = "4.Ticket Controller", description = "Endpoints for the tickets retrieval according certain params!")
 public class TicketController {
 
     private final TicketService service;
