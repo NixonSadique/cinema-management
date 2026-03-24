@@ -8,6 +8,6 @@ public record RoomResponse(
         Long id,
         String name,
         RoomType roomType,
-        List<SeatResponseForRoom> seats
+        List<SeatResponse> seats
 ) {
 }

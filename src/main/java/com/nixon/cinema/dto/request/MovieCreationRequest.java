@@ -1,9 +1,10 @@
 package com.nixon.cinema.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 public record MovieCreationRequest(
@@ -14,6 +15,6 @@ public record MovieCreationRequest(
         Set<String> production,
         Set<String> director,
         Set<String> mainCast,
-        LocalDateTime releaseDate
+        OffsetDateTime releaseDate
 ) {
 }

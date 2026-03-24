@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/user/default").permitAll()
                         .requestMatchers(POST, "/cinema/v1/user/default").permitAll()
                         .requestMatchers(POST, "/auth/**").permitAll()
-                        .requestMatchers("/user/**").hasRole("ADMIN")
+//                        .requestMatchers("/user/**").hasRole("ADMIN")
                         .requestMatchers(
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",

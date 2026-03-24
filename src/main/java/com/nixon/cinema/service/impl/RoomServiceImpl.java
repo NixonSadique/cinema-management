@@ -2,7 +2,7 @@ package com.nixon.cinema.service.impl;
 
 import com.nixon.cinema.dto.request.RoomCreationRequest;
 import com.nixon.cinema.dto.response.RoomResponse;
-import com.nixon.cinema.dto.response.SeatResponseForRoom;
+import com.nixon.cinema.dto.response.SeatResponse;
 import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.Room;
@@ -64,7 +64,7 @@ public class RoomServiceImpl implements RoomService {
                 savedRoom.getName(),
                 savedRoom.getRoomType(),
                 savedRoom.getSeat().stream().map(
-                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
+                        seat -> new SeatResponse(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
                 ).toList());
     }
 
@@ -72,7 +72,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomResponse getRoomByName(String name) {
         return roomRepository.findByName(name).map(
                 room -> new RoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
-                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
+                        seat -> new SeatResponse(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
                 ).toList())
         ).orElseThrow(
                 () -> new EntityNotFoundException("Room with name " + name + " not found")
@@ -83,7 +83,7 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomResponse> getRoomByType(RoomType type) {
         return roomRepository.findAllByRoomType(type).stream().map(
                 room -> new RoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
-                        seat -> new SeatResponseForRoom(seat.getId(), seat.getSeatRow() + seat.getSeatNumber() + seat)
+                        seat -> new SeatResponse(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
                 ).toList())
         ).toList();
     }

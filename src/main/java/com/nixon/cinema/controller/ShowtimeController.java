@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -30,34 +30,34 @@ public class ShowtimeController {
         return ResponseEntity.ok(service.getAllShowTimes());
     }
 
-    @GetMapping("/showtimes/active")
-    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimes() {
-        return ResponseEntity.ok(service.getAllActiveShowTimes());
-    }
-
-    @GetMapping(value = "showtimes/active{roomId}")
-    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithRoomId(@RequestParam Long id) {
-        return ResponseEntity.ok(service.getByActiveTrueAndRoomId(id));
-    }
-
-    @GetMapping("/showtimes/active{startTime}")
-    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithStartTime(@RequestParam LocalDateTime startTime) {
-        return ResponseEntity.ok(service.getByActiveTrueAndStartTime(startTime));
-    }
-
     @GetMapping("/showtimes{movieId}")
     ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithMovieId(@RequestParam Long movieId) {
         return ResponseEntity.ok(service.getAllByMovieId(movieId));
     }
 
     @GetMapping("/showtimes/start/{startTime}")
-    ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithStartTime(@PathVariable LocalDateTime startTime) {
+    ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithStartTime(@PathVariable OffsetDateTime startTime) {
         return ResponseEntity.ok(service.getAllByStartTime(startTime));
     }
 
     @GetMapping("/showtimes/room/{roomId}")
     ResponseEntity<List<ShowtimeResponse>> getAllShowtimesWithRoomId(@PathVariable Long roomId) {
         return ResponseEntity.ok(service.getAllByRoomId(roomId));
+    }
+
+    @GetMapping("/showtimes/active")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimes() {
+        return ResponseEntity.ok(service.getAllActiveShowTimes());
+    }
+
+    @GetMapping(value = "/showtimes/active/room/{roomId}")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithRoomId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getByActiveTrueAndRoomId(id));
+    }
+
+    @GetMapping("/showtimes/active{startTime}")
+    ResponseEntity<List<ShowtimeResponse>> getAllActiveShowtimesWithStartTime(@RequestParam OffsetDateTime startTime) {
+        return ResponseEntity.ok(service.getByActiveTrueAndStartTime(startTime));
     }
 
 

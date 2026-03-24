@@ -1,13 +1,13 @@
 package com.nixon.cinema.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record ShowtimeResponse(
         Long id,
-        LocalDateTime startTime,
-        LocalDateTime endTime,
+        OffsetDateTime startTime,
+        OffsetDateTime endTime,
         Double price,
         MovieResponse movie,
-        RoomResponseForShowtime room
+        SimpleRoomResponse room
 ) {
 }

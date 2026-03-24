@@ -4,11 +4,11 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record ShowtimeRequest(
-        @Future LocalDateTime startTime,
-        @Future LocalDateTime endTime,
+        @Future OffsetDateTime startTime,
+        @Future OffsetDateTime endTime,
         @NotNull @Positive Long roomId,
         @NotNull @Positive Double price
 ) {

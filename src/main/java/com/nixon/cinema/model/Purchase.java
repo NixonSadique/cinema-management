@@ -32,6 +32,6 @@ public class Purchase {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
 }

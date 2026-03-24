@@ -3,6 +3,7 @@ package com.nixon.cinema.service.impl;
 import com.nixon.cinema.dto.request.PurchaseRequest;
 import com.nixon.cinema.dto.response.PurchaseResponse;
 import com.nixon.cinema.dto.response.TicketResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.exceptions.SeatAlreadyBookedException;
 import com.nixon.cinema.model.*;
@@ -17,9 +18,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.nixon.cinema.model.enums.PurchaseStatus.*;
+import static com.nixon.cinema.model.enums.PurchaseStatus.CANCELLED;
+import static com.nixon.cinema.model.enums.PurchaseStatus.COMPLETED;
 
 @Service
 @RequiredArgsConstructor
@@ -57,21 +62,17 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         purchase.setTickets(tickets);
         purchase.setPrice(price);
-        purchase.setStatus(PurchaseStatus.PENDING);
+        purchase.setStatus(PENDING);
         purchase.setUser(getLoggedUser());
         var savedPurchase = purchaseRepository.save(purchase);
 
-        return new PurchaseResponse(savedPurchase.getId(), savedPurchase.getPrice(), PurchaseStatus.PENDING, tickets.stream().map(
+        return new PurchaseResponse(savedPurchase.getId(), savedPurchase.getPrice(), PENDING, tickets.stream().map(
                 ticket -> new TicketResponse(ticket.getId(),
                         ticket.getUnitPrice(),
                         ticket.getSeat().getSeatRow() + ticket.getSeat().getSeatNumber())
         ).toList());
     }
 
-    /**
-     * @return The authenticated User
-     * @throws AuthenticationCredentialsNotFoundException if the user isn't authenticated
-     */
     private User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() != null) {
@@ -88,7 +89,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         Ticket ticket = new Ticket();
 
         ticket.setPurchase(purchase);
-        ticket.setPurchaseTime(LocalDateTime.now());
+        ticket.setPurchaseTime(OffsetDateTime.now());
         ticket.setSeat(seat);
         ticket.setShowtime(showtime);
         ticket.setUnitPrice(showtime.getPrice());
@@ -102,9 +103,11 @@ public class PurchaseServiceImpl implements PurchaseService {
                 () -> new EntityNotFoundException("Purchase Not Found!")
         );
 
-        purchase.setStatus(PurchaseStatus.CANCELLED);
+        purchase.setStatus(CANCELLED);
 
-        purchase.getTickets().forEach(ticket -> ticketRepository.deleteById(ticket.getId()));
+        purchase.getTickets().clear();
+
+        purchaseRepository.save(purchase);
 
         return "Purchase Cancelled!";
     }
@@ -115,11 +118,15 @@ public class PurchaseServiceImpl implements PurchaseService {
                 () -> new EntityNotFoundException("Purchase Not Found!")
         );
 
-        purchase.setStatus(PurchaseStatus.COMPLETED);
+        if (purchase.getStatus() == PurchaseStatus.CANCELLED) {
+            throw new BadRequestException("Purchase is already cancelled");
+        }
+
+        purchase.setStatus(COMPLETED);
 
         purchaseRepository.save(purchase);
 
-        return new PurchaseResponse(purchase.getId(), purchase.getPrice(), PurchaseStatus.COMPLETED, purchase.getTickets().stream().map(
+        return new PurchaseResponse(purchase.getId(), purchase.getPrice(), COMPLETED, purchase.getTickets().stream().map(
                 ticket -> new TicketResponse(ticket.getId(),
                         ticket.getUnitPrice(),
                         ticket.getSeat().getSeatRow() + ticket.getSeat().getSeatNumber()

@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Service
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tb_movie")
@@ -32,12 +31,17 @@ public class Movie {
     @Column(nullable = false)
     private int duration;
 
-    private LocalDateTime releaseDate;
+    private OffsetDateTime releaseDate;
 
     private String ageRating;
 
+    @ElementCollection()
     private Set<String> production;
+
+    @ElementCollection
     private Set<String> director;
+
+    @ElementCollection
     private Set<String> mainCast;
 
     @OneToMany(mappedBy = "movie")

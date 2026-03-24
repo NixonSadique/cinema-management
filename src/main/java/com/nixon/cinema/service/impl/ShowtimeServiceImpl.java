@@ -3,8 +3,9 @@ package com.nixon.cinema.service.impl;
 import com.nixon.cinema.dto.request.ShowtimeCreationRequest;
 import com.nixon.cinema.dto.request.ShowtimeRequest;
 import com.nixon.cinema.dto.response.MovieResponse;
-import com.nixon.cinema.dto.response.RoomResponseForShowtime;
+import com.nixon.cinema.dto.response.SimpleRoomResponse;
 import com.nixon.cinema.dto.response.ShowtimeResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.Movie;
 import com.nixon.cinema.model.Room;
@@ -16,7 +17,7 @@ import com.nixon.cinema.service.ShowtimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,10 @@ public class ShowtimeServiceImpl implements ShowtimeService {
             var room = roomRepository.findById(showtime.roomId()).orElseThrow(
                     () -> new EntityNotFoundException("The room with ID" + showtime.roomId() + " not found!")
             );
+
+            if (showtimeRepository.existsByStartTimeAndRoomId(showtime.startTime(), showtime.roomId())) {
+                throw new BadRequestException("This room is occupied at the time chosen");
+            }
 
             Showtime rawShowtime = new Showtime();
             rawShowtime.setMovie(movie);
@@ -77,8 +82,8 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         ).toList();
     }
 
-    private RoomResponseForShowtime mapRoomToResponse(Room room) {
-        return new RoomResponseForShowtime(
+    private SimpleRoomResponse mapRoomToResponse(Room room) {
+        return new SimpleRoomResponse(
                 room.getId(),
                 room.getName(),
                 room.getRoomType(),
@@ -129,7 +134,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
-    public List<ShowtimeResponse> getAllByStartTime(LocalDateTime startTime) {
+    public List<ShowtimeResponse> getAllByStartTime(OffsetDateTime startTime) {
         return showtimeRepository.findAllByStartTime(startTime).stream().map(
                 showtime -> new ShowtimeResponse(
                         showtime.getId(),
@@ -157,7 +162,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
-    public List<ShowtimeResponse> getByActiveTrueAndStartTime(LocalDateTime startTime) {
+    public List<ShowtimeResponse> getByActiveTrueAndStartTime(OffsetDateTime startTime) {
         return showtimeRepository.findByActiveTrueAndStartTime(startTime).stream().map(
                 showtime -> new ShowtimeResponse(
                         showtime.getId(),

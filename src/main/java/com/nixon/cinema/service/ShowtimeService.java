@@ -3,7 +3,7 @@ package com.nixon.cinema.service;
 import com.nixon.cinema.dto.request.ShowtimeCreationRequest;
 import com.nixon.cinema.dto.response.ShowtimeResponse;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface ShowtimeService {
@@ -15,11 +15,11 @@ public interface ShowtimeService {
 
     List<ShowtimeResponse> getAllByMovieId(Long id);
 
-    List<ShowtimeResponse> getAllByStartTime(LocalDateTime startTime);
+    List<ShowtimeResponse> getAllByStartTime(OffsetDateTime startTime);
 
     List<ShowtimeResponse> getAllByRoomId(Long id);
 
-    List<ShowtimeResponse> getByActiveTrueAndStartTime(LocalDateTime startTime);
+    List<ShowtimeResponse> getByActiveTrueAndStartTime(OffsetDateTime startTime);
 
     List<ShowtimeResponse> getByActiveTrueAndRoomId(Long id);
 

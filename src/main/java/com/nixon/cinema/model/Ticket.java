@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
@@ -26,7 +27,7 @@ public class Ticket {
     @Column(nullable = false)
     private Double unitPrice;
 
-    private LocalDateTime  purchaseTime;
+    private OffsetDateTime purchaseTime;
 
     @ManyToOne
     @JoinColumn(name = "showtime_id")

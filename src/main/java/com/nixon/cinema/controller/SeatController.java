@@ -1,6 +1,6 @@
 package com.nixon.cinema.controller;
 
-import com.nixon.cinema.dto.response.SeatResponseForRoom;
+import com.nixon.cinema.dto.response.SeatResponse;
 import com.nixon.cinema.service.SeatService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class SeatController {
     private final SeatService service;
 
     @GetMapping("/seats/{roomId}")
-    ResponseEntity<List<SeatResponseForRoom>> getSeatsByRoom(@RequestParam Long roomId) {
+    ResponseEntity<List<SeatResponse>> getSeatsByRoom(@RequestParam Long roomId) {
         return ResponseEntity.ok(service.getAllSeatsByRoomId(roomId));
     }
 

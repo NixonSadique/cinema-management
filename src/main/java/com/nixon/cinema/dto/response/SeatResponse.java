@@ -1,6 +1,6 @@
 package com.nixon.cinema.dto.response;
 
-public record SeatResponseForRoom(
+public record SeatResponse(
         Long id,
         String seat
 ) {

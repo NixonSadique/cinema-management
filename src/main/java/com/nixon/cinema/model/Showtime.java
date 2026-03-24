@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -19,8 +19,8 @@ public class Showtime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private OffsetDateTime startTime;
+    private OffsetDateTime endTime;
 
     private Boolean active;
 

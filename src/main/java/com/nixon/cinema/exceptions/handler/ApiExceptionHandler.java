@@ -76,7 +76,7 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 OffsetDateTime.now(),
                 request.getServletPath(),
-                ex.getMessage(),
+                "A Validation Error occurred!",
                 ex.getBindingResult().getFieldErrors().stream().map(
                         fieldError ->
                                 new ValidationError(fieldError.getField(), fieldError.getDefaultMessage())

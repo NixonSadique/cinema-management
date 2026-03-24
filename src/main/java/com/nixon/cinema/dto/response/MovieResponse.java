@@ -1,6 +1,6 @@
 package com.nixon.cinema.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 public record MovieResponse(
@@ -12,6 +12,6 @@ public record MovieResponse(
         Set<String> production,
         Set<String> director,
         Set<String> mainCast,
-        LocalDateTime releaseDate
+        OffsetDateTime releaseDate
 ) {
 }

@@ -25,7 +25,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/rooms")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Create Room",
             description = "Creates a new room, based on the capacity chosen and the number of columns.",
@@ -54,7 +54,7 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
 
-    @GetMapping("/rooms/{type}")
+    @GetMapping("/rooms{type}")
     @Operation(
             summary = "Retrieves a room",
             description = "Retrieves a room given the name of the room!",
@@ -65,7 +65,7 @@ public class RoomController {
                     )
             }
     )
-    ResponseEntity<List<RoomResponse>> getRoomByType(@PathVariable RoomType type) {
+    ResponseEntity<List<RoomResponse>> getRoomByType(@RequestParam RoomType type) {
         return ResponseEntity.ok(roomService.getRoomByType(type));
     }
 
