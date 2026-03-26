@@ -22,13 +22,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public TokenResponse login(AuthenticationRequest request) {
+        User user = repository.findByUsername(request.username()).orElseThrow(
+                () -> new EntityNotFoundException("Username not found")
+        );
+        
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
 
-        User user = repository.findByUsername(request.username()).orElseThrow(
-                () -> new EntityNotFoundException("Username not found")
-        );
 
         return jwtService.generateToken(user);
     }

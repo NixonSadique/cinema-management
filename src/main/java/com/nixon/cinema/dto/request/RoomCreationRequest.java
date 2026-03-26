@@ -8,6 +8,6 @@ public record RoomCreationRequest(
         @NotBlank String name,
         @NotBlank RoomType type,
         @Min(50) Integer capacity,
-        @Min(5) Integer columnNumber
+        @Min(5) Integer rowNumber
 ) {
 }

@@ -1,7 +1,6 @@
 package com.nixon.cinema.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 
 import java.time.OffsetDateTime;

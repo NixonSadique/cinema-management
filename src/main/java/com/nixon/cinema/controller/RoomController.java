@@ -2,6 +2,7 @@ package com.nixon.cinema.controller;
 
 import com.nixon.cinema.dto.request.RoomCreationRequest;
 import com.nixon.cinema.dto.response.RoomResponse;
+import com.nixon.cinema.dto.response.SimpleRoomResponse;
 import com.nixon.cinema.model.enums.RoomType;
 import com.nixon.cinema.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +10,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class RoomController {
             method = "POST",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Room Created"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request")
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+
             }
     )
     ResponseEntity<RoomResponse> createRoom(@RequestBody RoomCreationRequest request) {
@@ -50,7 +52,7 @@ public class RoomController {
                     )
             }
     )
-    ResponseEntity<RoomResponse> getRoom(@PathVariable String name) {
+    ResponseEntity<RoomResponse> getRoom(@PathVariable @NotBlank String name) {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
 
@@ -65,7 +67,7 @@ public class RoomController {
                     )
             }
     )
-    ResponseEntity<List<RoomResponse>> getRoomByType(@RequestParam RoomType type) {
+    ResponseEntity<List<SimpleRoomResponse>> getRoomByType(@RequestParam RoomType type) {
         return ResponseEntity.ok(roomService.getRoomByType(type));
     }
 

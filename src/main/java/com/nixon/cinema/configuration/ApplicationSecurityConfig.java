@@ -1,5 +1,6 @@
 package com.nixon.cinema.configuration;
 
+import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +26,8 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username ->  repository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Username not found"));
+        return username -> repository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Username not found"));
     }
 
     @Bean
@@ -35,7 +36,7 @@ public class ApplicationSecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider  authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
         return provider;

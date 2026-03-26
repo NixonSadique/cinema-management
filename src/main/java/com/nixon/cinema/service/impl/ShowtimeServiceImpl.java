@@ -62,12 +62,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         return "Showtimes for the movie created successfully!";
     }
 
-    /**
-     * TODO: Implement the DTO response
-     *
-     * @return
-     */
-
+    
     @Override
     public List<ShowtimeResponse> getAllShowTimes() {
         return showtimeRepository.findAll().stream().map(

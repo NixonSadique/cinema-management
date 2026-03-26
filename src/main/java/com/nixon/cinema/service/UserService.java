@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    String createDefaultAdmin();
+    String createAdmin(UserRequest request);
 
     String createManager(UserRequest request);
 

@@ -13,6 +13,4 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByTitleIgnoreCase(String title);
 
-    List<Movie> findByOrderByAgeRatingDesc();
-
 }

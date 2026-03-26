@@ -3,6 +3,7 @@ package com.nixon.cinema.service.impl;
 import com.nixon.cinema.dto.request.RoomCreationRequest;
 import com.nixon.cinema.dto.response.RoomResponse;
 import com.nixon.cinema.dto.response.SeatResponse;
+import com.nixon.cinema.dto.response.SimpleRoomResponse;
 import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.Room;
@@ -38,10 +39,9 @@ public class RoomServiceImpl implements RoomService {
         List<Seat> seats = new ArrayList<>();
 
         for (int i = 0; i < request.capacity(); i++) {
-            if ((i != 0) && (i % request.columnNumber() == 0)) {
+            if ((i != 0) && (i % request.rowNumber() == 0)) {
                 row++;
                 seatNum = 0;
-                System.out.println("New Row: " + row);
             }
             seatNum++;
 
@@ -80,11 +80,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomResponse> getRoomByType(RoomType type) {
+    public List<SimpleRoomResponse> getRoomByType(RoomType type) {
         return roomRepository.findAllByRoomType(type).stream().map(
-                room -> new RoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().stream().map(
-                        seat -> new SeatResponse(seat.getId(), seat.getSeatRow() + seat.getSeatNumber())
-                ).toList())
+                room -> new SimpleRoomResponse(room.getId(), room.getName(), room.getRoomType(), room.getSeat().size())
         ).toList();
     }
 }

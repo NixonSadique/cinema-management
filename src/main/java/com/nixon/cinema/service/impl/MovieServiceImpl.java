@@ -2,6 +2,7 @@ package com.nixon.cinema.service.impl;
 
 import com.nixon.cinema.dto.request.MovieCreationRequest;
 import com.nixon.cinema.dto.response.MovieResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.model.Movie;
 import com.nixon.cinema.repository.MovieRepository;
 import com.nixon.cinema.service.MovieService;
@@ -18,6 +19,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public String createMovie(MovieCreationRequest request) {
+
+        if (movieRepository.findByTitleIgnoreCase(request.title()).isPresent()) {
+            throw new BadRequestException("A movie with the title %s already exists!".formatted(request.title()));
+        }
 
         Movie movie = new Movie();
         movie.setTitle(request.title());

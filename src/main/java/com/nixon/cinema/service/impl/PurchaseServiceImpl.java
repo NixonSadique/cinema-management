@@ -12,7 +12,6 @@ import com.nixon.cinema.repository.*;
 import com.nixon.cinema.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,7 +48,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                     () -> new EntityNotFoundException("Seat Not Found!")
             );
             Showtime showtime = showtimeRepository.findById(request.tickets().get(i).showtimeId()).orElseThrow(
-                    () -> new EntityNotFoundException("ShowTime Not Found!")
+                    () -> new EntityNotFoundException("Showtime Not Found!")
             );
 
             if (ticketRepository.existsBySeatIdAndShowtimeId(seat.getId(), showtime.getId()))
@@ -73,7 +72,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         ).toList());
     }
 
-    private User getLoggedUser() {
+    private @NonNull User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();

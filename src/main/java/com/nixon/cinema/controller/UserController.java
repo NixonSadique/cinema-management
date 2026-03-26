@@ -22,9 +22,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users/default")
-    ResponseEntity<String> defaultUser() {
-        return new ResponseEntity<>(userService.createDefaultAdmin(), HttpStatus.CREATED);
+    @PostMapping("/users/admin")
+    ResponseEntity<String> createAdmin(@RequestBody @Valid UserRequest request) {
+        return new ResponseEntity<>(userService.createAdmin(request), HttpStatus.CREATED);
     }
 
     @PostMapping("/users/manager")

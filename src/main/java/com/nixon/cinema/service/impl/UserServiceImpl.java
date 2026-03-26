@@ -26,17 +26,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public String createDefaultAdmin() {
+    public String createAdmin(UserRequest request) {
         User user = new User();
-        user.setEmail("admin@email.com");
-        user.setUsername("admin");
-        user.setPassword(passwordEncoder.encode("admin"));
-        user.setPhone("123456789");
-        user.setFirstName("admin");
-        user.setLastName("admin");
+        user.setEmail(request.email());
+        user.setUsername(request.username());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPhone(request.phone());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
         user.setRole(Role.ADMIN);
         userRepo.save(user);
-        return "Default Admin Created!";
+        return "Admin Created!";
     }
 
     @Override
