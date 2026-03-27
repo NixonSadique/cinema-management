@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -16,6 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -27,23 +29,36 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
     private final SecurityFilter securityFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .headers(AbstractHttpConfigurer::disable)
+                .headers(
+                        headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                )
+                .exceptionHandling(exception -> {
+                            exception.accessDeniedHandler(customAccessDeniedHandler);
+                            exception.authenticationEntryPoint(customAuthenticationEntryPoint);
+                        }
+                )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(POST, "/user/default").permitAll()
-                        .requestMatchers(POST, "/cinema/v1/user/default").permitAll()
-                        .requestMatchers(POST, "/auth/**").permitAll()
-//                        .requestMatchers("/user/**").hasRole("ADMIN")
+                        .requestMatchers(POST, "/cinema/v1/auth/login").permitAll()
+                        .requestMatchers(POST, "/cinema/v1/users").permitAll()
+                        .requestMatchers("/user/**").hasRole("ADMIN")
+                        .requestMatchers(POST, "/cinema/v1/showtimes").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(GET, "/cinema/v1/showtimes/active").permitAll()
+                        .requestMatchers("/cinema/v1/showtimes/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(POST, "/cinema/v1/movies").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(POST, "/cinema/v1/rooms").hasAnyRole("ADMIN")
                         .requestMatchers(
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/h2-console/**"
+                                "/h2-console/**"//TO BE REMOVED IN PROD
                         ).permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .sessionManagement(sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(STATELESS))
