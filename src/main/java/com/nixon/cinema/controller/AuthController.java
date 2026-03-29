@@ -2,7 +2,14 @@ package com.nixon.cinema.controller;
 
 import com.nixon.cinema.dto.request.AuthenticationRequest;
 import com.nixon.cinema.dto.response.TokenResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
+import com.nixon.cinema.exceptions.handler.StandardErrorResponse;
 import com.nixon.cinema.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +28,10 @@ public class AuthController {
 
     private final AuthenticationService service;
 
+    @Operation(
+            summary = "Log In",
+            description = "Endpoint to authenticate a user. <br>Returns a Token."
+    )
     @PostMapping("/auth/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody AuthenticationRequest request) {
         return new ResponseEntity<>(service.login(request), HttpStatus.OK);

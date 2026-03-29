@@ -24,17 +24,26 @@ public class PurchaseController {
     @Operation(
             summary = "Starts the purchase operation!",
             description = "Create a purchase with the tickets for the chosen movies, showtimes and seats assignment." +
+                    "<br>" +
                     " This purchase is created with a PENDING status."
     )
     ResponseEntity<PurchaseResponse> startPurchase(@RequestBody PurchaseRequest request) {
         return new ResponseEntity<>(service.startPurchase(request), CREATED);
     }
 
+    @Operation(
+            summary = "Confirm a purchase",
+            description = "Confirms a purchase with a PENDING state."
+    )
     @PutMapping("/purchases/{id}/confirm")
     ResponseEntity<PurchaseResponse> confirmPurchase(@PathVariable Long id) {
         return new ResponseEntity<>(service.confirmPurchase(id), OK);
     }
 
+    @Operation(
+            summary = "Cancels purchase",
+            description = "Cancels a purchase with PENDING state. Once cancelled, a new purchase must be started!"
+    )
     @PutMapping("/purchases/{id}/cancel")
     ResponseEntity<String> cancelPurchase(@PathVariable Long id) {
         return new ResponseEntity<>(service.cancelPurchase(id), OK);

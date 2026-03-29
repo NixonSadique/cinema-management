@@ -2,6 +2,7 @@ package com.nixon.cinema.controller;
 
 import com.nixon.cinema.dto.response.SeatResponse;
 import com.nixon.cinema.service.SeatService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,10 @@ public class SeatController {
 
     private final SeatService service;
 
+    @Operation(
+            summary = "Get Seats",
+            description = "Get all seats in a room."
+    )
     @GetMapping("/seats/{roomId}")
     ResponseEntity<List<SeatResponse>> getSeatsByRoom(@RequestParam Long roomId) {
         return ResponseEntity.ok(service.getAllSeatsByRoomId(roomId));

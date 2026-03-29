@@ -26,7 +26,6 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/rooms")
-//    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Create Room",
             description = "Creates a new room, based on the capacity chosen and the number of columns.",
@@ -34,7 +33,6 @@ public class RoomController {
             responses = {
                     @ApiResponse(responseCode = "201", description = "Room Created"),
                     @ApiResponse(responseCode = "400", description = "Bad Request"),
-
             }
     )
     ResponseEntity<RoomResponse> createRoom(@RequestBody RoomCreationRequest request) {
@@ -44,30 +42,18 @@ public class RoomController {
     @GetMapping("/rooms/{name}")
     @Operation(
             summary = "Retrieves a room",
-            description = "Retrieves a room given the name of the room!",
-            method = "GET",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",
-                            content = @Content(schema = @Schema(implementation = RoomResponse.class))
-                    )
-            }
+            description = "Retrieves a room given the name of the room!"
     )
     ResponseEntity<RoomResponse> getRoom(@PathVariable @NotBlank String name) {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
 
-    @GetMapping("/rooms{type}")
+    @GetMapping("/rooms/{type}")
     @Operation(
             summary = "Retrieves a room",
-            description = "Retrieves a room given the name of the room!",
-            method = "GET",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Room Not Found",
-                            content = @Content(schema = @Schema(implementation = RoomResponse.class))
-                    )
-            }
+            description = "Retrieves a list of rooms given the type of the room!"
     )
-    ResponseEntity<List<SimpleRoomResponse>> getRoomByType(@RequestParam RoomType type) {
+    ResponseEntity<List<SimpleRoomResponse>> getRoomByType(@PathVariable RoomType type) {
         return ResponseEntity.ok(roomService.getRoomByType(type));
     }
 
