@@ -1,10 +1,10 @@
 package com.nixon.cinema.dto.request;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserUpdateRequest(
-        @Size(min = 5, max = 50) String username,
-        @Email() String email,
-        @Size(min = 9, max = 9) String phone) {
+        @Email() @NotBlank String email,
+        @Size(min = 9, max = 9) @NotBlank String phone) {
 }

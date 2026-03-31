@@ -3,9 +3,12 @@ package com.nixon.cinema.controller;
 import com.nixon.cinema.dto.request.UserRequest;
 import com.nixon.cinema.dto.request.UserUpdateRequest;
 import com.nixon.cinema.dto.response.UserResponse;
+import com.nixon.cinema.model.enums.Role;
 import com.nixon.cinema.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +25,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users/admin")
-    ResponseEntity<String> createAdmin(@RequestBody @Valid UserRequest request) {
-        return new ResponseEntity<>(userService.createAdmin(request), HttpStatus.CREATED);
+    @PutMapping("/users/{id}/promote")
+    ResponseEntity<String> createAdmin(@PathVariable @Min(1L) Long id, @RequestParam @NotBlank Role role) {
+        return new ResponseEntity<>(userService.promoteUser(id, role), HttpStatus.CREATED);
     }
 
     @PostMapping("/users/manager")
@@ -42,9 +45,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PutMapping("/update")
-    ResponseEntity<String> updateUser(@RequestBody @Valid UserUpdateRequest request) {
-        return new ResponseEntity<>(userService.updateUser(request), HttpStatus.OK);
+    @PutMapping("/users/{username}")
+    ResponseEntity<String> updateUser(@RequestBody @Valid UserUpdateRequest request, @NotBlank String username) {
+        return new ResponseEntity<>(userService.updateUser(username, request), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}")

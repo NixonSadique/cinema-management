@@ -28,20 +28,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public String createAdmin(UserRequest request) {
-        User user = new User();
-        user.setEmail(request.email());
-        user.setUsername(request.username());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setPhone(request.phone());
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setRole(Role.ADMIN);
+    public String promoteUser(Long id, Role role) {
+        var user = userRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User not found with id: " + id)
+        );
+        user.setRole(role);
         userRepo.save(user);
-        return "Admin Created!";
+        return "The user: %s, was promoted to %s.".formatted(user.getUsername(), role.name());
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public String createManager(UserRequest request) {
         var usernameExists = userRepo.existsByUsername(request.username());
         var emailExists = userRepo.existsByEmail(request.email());
@@ -84,8 +81,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUser(UserUpdateRequest request) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String updateUser(String username, UserUpdateRequest request) {
+        var user = userRepo.findByUsername(username).orElseThrow(
+                () -> new EntityNotFoundException("Username %s not found!".formatted(username))
+        );
+
+        user.setEmail(request.email());
+        user.setPhone(request.phone());
+
+        userRepo.save(user);
+
+        return "User updated successfully!";
     }
 
     @Override

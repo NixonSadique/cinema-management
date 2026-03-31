@@ -42,8 +42,15 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                     () -> new EntityNotFoundException("The room with ID" + showtime.roomId() + " not found!")
             );
 
-            if (showtimeRepository.existsByStartTimeAndRoomId(showtime.startTime(), showtime.roomId())) {
-                throw new BadRequestException("This room is occupied at the time chosen");
+            if (showtimeRepository.countOverlappingShowtime(room.getId(), showtime.startTime(), showtime.endTime()) != 0) {
+                throw new BadRequestException("The room " + room.getId() + ", is occupied at the time chosen;");
+            }
+
+            var isTimeRangeLongerThanMovie = showtime.startTime().plusMinutes(movie.getDuration()).isBefore(showtime.endTime())
+                    || showtime.startTime().plusMinutes(movie.getDuration()).isEqual(showtime.endTime());
+
+            if ((showtime.endTime().isBefore(showtime.startTime())) || (!isTimeRangeLongerThanMovie)) {
+                throw new BadRequestException("The end time is before the start time, or the duration is less than the movie duration");
             }
 
             Showtime rawShowtime = new Showtime();
@@ -62,7 +69,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         return "Showtimes for the movie created successfully!";
     }
 
-    
+
     @Override
     public List<ShowtimeResponse> getAllShowTimes() {
         return showtimeRepository.findAll().stream().map(

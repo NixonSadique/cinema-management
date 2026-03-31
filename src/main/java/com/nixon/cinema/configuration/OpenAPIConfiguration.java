@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
                         "<li>tickets purchases, etc<l/i>" +
                         "</ul> ",
                 title = "Cinema Management",
-                version = "V0.0.1",
+                version = "V0.9.9",
                 contact = @Contact(
                         name = "Nixon Sadique",
                         email = "nixonsadique2005@gmail.com"
