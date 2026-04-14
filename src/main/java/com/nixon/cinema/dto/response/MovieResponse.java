@@ -1,6 +1,7 @@
 package com.nixon.cinema.dto.response;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 
 public record MovieResponse(
@@ -9,9 +10,9 @@ public record MovieResponse(
         String description,
         String ageRating,
         int duration,
-        Set<String> production,
-        Set<String> director,
-        Set<String> mainCast,
+        List<String> production,
+        List<String> director,
+        List<String> mainCast,
         OffsetDateTime releaseDate
 ) {
 }

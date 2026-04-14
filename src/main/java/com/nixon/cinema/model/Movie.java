@@ -35,14 +35,14 @@ public class Movie {
 
     private String ageRating;
 
-    @ElementCollection()
-    private Set<String> production;
+    @ElementCollection
+    private List<String> production;
 
     @ElementCollection
-    private Set<String> director;
+    private List<String> director;
 
     @ElementCollection
-    private Set<String> mainCast;
+    private List<String> mainCast;
 
     @OneToMany(mappedBy = "movie")
     private List<Showtime> showtimes;
