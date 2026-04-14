@@ -39,12 +39,12 @@ public class RoomController {
         return new ResponseEntity<>(roomService.createRoom(request), HttpStatus.CREATED);
     }
 
-    @GetMapping("/rooms/{name}")
+    @GetMapping("/rooms")
     @Operation(
             summary = "Retrieves a room",
             description = "Retrieves a room given the name of the room!"
     )
-    ResponseEntity<RoomResponse> getRoom(@PathVariable @NotBlank String name) {
+    ResponseEntity<RoomResponse> getRoom(@RequestParam @NotBlank String name) {
         return ResponseEntity.ok(roomService.getRoomByName(name));
     }
 

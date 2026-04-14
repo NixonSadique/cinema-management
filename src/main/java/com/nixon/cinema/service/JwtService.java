@@ -9,7 +9,7 @@ public interface JwtService {
 
     String extractUsername(String token);
 
-    TokenResponse generateToken(User user);
+    String generateToken(User user);
 
     boolean isTokenValid(String token, UserDetails userDetails);
 

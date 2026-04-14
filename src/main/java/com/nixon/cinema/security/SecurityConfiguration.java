@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                 .headers(
                         headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(exception -> {
                             exception.accessDeniedHandler(customAccessDeniedHandler);
                             exception.authenticationEntryPoint(customAuthenticationEntryPoint);
@@ -55,8 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/h2-console/**"//TO BE REMOVED IN PROD
+                                "/swagger-ui/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

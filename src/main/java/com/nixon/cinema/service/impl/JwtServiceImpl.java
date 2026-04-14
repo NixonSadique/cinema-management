@@ -22,7 +22,7 @@ public class JwtServiceImpl implements JwtService {
     private String secretKey;
 
 
-    private long expirationTime = 18000000L;
+    private long expirationTime = 900000L;
 
     @Override
     public String extractUsername(String token) {
@@ -40,9 +40,10 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public TokenResponse generateToken(User user) {
+    public String generateToken(User user) {
         Date expiresAt = new Date(System.currentTimeMillis() + expirationTime);
-        String token = Jwts.builder()
+
+        return Jwts.builder()
                 .subject(user.getUsername())
                 .claims()
                 .add("role", user.getAuthorities())
@@ -51,8 +52,6 @@ public class JwtServiceImpl implements JwtService {
                 .expiration(expiresAt)
                 .signWith(getSignInKey())
                 .compact();
-
-        return new TokenResponse(token,expiresAt);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class JwtServiceImpl implements JwtService {
                 .getPayload();
     }
 
-    private SecretKey getSignInKey(){
+    private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
