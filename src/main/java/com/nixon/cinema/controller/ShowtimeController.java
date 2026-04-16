@@ -94,5 +94,14 @@ public class ShowtimeController {
         return ResponseEntity.ok(service.getByActiveTrueAndStartTime(startTime));
     }
 
+    @Operation(
+            summary = "Change the movie to deactivated",
+            description = "Get all active showtimes by start time!"
+    )
+    @PatchMapping("/showtimes/expired")
+    ResponseEntity<String> deactivateShowtimes() {
+        return ResponseEntity.ok(service.deactivateShowtimes());
+    }
+
 
 }

@@ -23,4 +23,5 @@ public interface ShowtimeService {
 
     List<ShowtimeResponse> getByActiveTrueAndRoomId(Long id);
 
+    String deactivateShowtimes();
 }

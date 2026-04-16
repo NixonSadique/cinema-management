@@ -190,4 +190,15 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 )
         ).toList();
     }
+
+    @Override
+    public String deactivateShowtimes() {
+        var showtimes = showtimeRepository.findByActiveTrueAndEndTimeLessThan(OffsetDateTime.now());
+        showtimes.forEach(
+                s -> s.setActive(false)
+        );
+        showtimeRepository.saveAll(showtimes);
+        return "Expired showtimes deactivated!";
+    }
+
 }

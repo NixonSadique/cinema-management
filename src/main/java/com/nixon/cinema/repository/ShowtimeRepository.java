@@ -30,4 +30,6 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     List<Showtime> findByActiveTrueAndRoomId(Long id);
 
     List<Showtime> findAllByActiveTrue();
+
+    List<Showtime> findByActiveTrueAndEndTimeLessThan(OffsetDateTime endTime);
 }
