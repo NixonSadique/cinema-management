@@ -28,7 +28,7 @@ class ShowtimeRepositoryTest {
     private Long roomId;
 
     @Test
-    void countOverlappingShowtime_case_start_time_overlaps() {
+    void countOverlappingShowtime_whenNewStartTimeOverlaps_returnNonZero() {
 
         var count = showtimeRepository.countOverlappingShowtime(roomId,
                 OffsetDateTime.of(2026, 10, 1, 11, 0, 0, 0, UTC),
@@ -40,7 +40,7 @@ class ShowtimeRepositoryTest {
     }
 
     @Test
-    void countOverlappingShowtime_case_end_time_overlaps() {
+    void countOverlappingShowtime_whenNewEndTimeOverlaps_returnNonZero() {
 
         var count = showtimeRepository.countOverlappingShowtime(roomId,
                 OffsetDateTime.of(2026, 10, 1, 9, 0, 0, 0, UTC),
@@ -51,7 +51,7 @@ class ShowtimeRepositoryTest {
     }
 
     @Test
-    void countOverlappingShowtime_case_times_wrap_existing() {
+    void countOverlappingShowtime_whenNewTimesWrapExisting_returnNonZero() {
 
         var count = showtimeRepository.countOverlappingShowtime(roomId,
                 OffsetDateTime.of(2026, 10, 1, 9, 0, 0, 0, UTC),
@@ -62,7 +62,7 @@ class ShowtimeRepositoryTest {
     }
 
     @Test
-    void countOverlappingShowtime_case_times_do_not_overlap() {
+    void countOverlappingShowtime_whenTimesDoNotOverlap_returnsZero() {
 
         var count = showtimeRepository.countOverlappingShowtime(roomId,
                 OffsetDateTime.of(2026, 10, 1, 13, 0, 0, 0, UTC),
@@ -73,7 +73,7 @@ class ShowtimeRepositoryTest {
     }
 
     @Test
-    void countOverlappingShowtime_case_existing_end_time_equals_new_start_time() {
+    void countOverlappingShowtime_whenNewStartTimeEqualsExistingEndTime_returnsZero() {
 
         var count = showtimeRepository.countOverlappingShowtime(roomId,
                 OffsetDateTime.of(2026, 10, 1, 12, 0, 0, 0, UTC),
