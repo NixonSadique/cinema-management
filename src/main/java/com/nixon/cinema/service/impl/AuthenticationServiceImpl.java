@@ -9,12 +9,14 @@ import com.nixon.cinema.service.AuthenticationService;
 import com.nixon.cinema.service.JwtService;
 import com.nixon.cinema.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository repository;
@@ -31,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
-
+        log.info("User with username {} logged", request.username());
         return new TokenResponse(
                 jwtService.generateToken(user),
                 refreshTokenService.createRefreshToken(request.username()).getToken());
