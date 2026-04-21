@@ -11,6 +11,7 @@ import com.nixon.cinema.model.enums.PurchaseStatus;
 import com.nixon.cinema.repository.*;
 import com.nixon.cinema.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nixon.cinema.model.enums.PurchaseStatus.*;
-import static com.nixon.cinema.model.enums.PurchaseStatus.CANCELLED;
-import static com.nixon.cinema.model.enums.PurchaseStatus.COMPLETED;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PurchaseServiceImpl implements PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
@@ -51,8 +51,10 @@ public class PurchaseServiceImpl implements PurchaseService {
                     () -> new EntityNotFoundException("Showtime Not Found!")
             );
 
-            if (ticketRepository.existsBySeatIdAndShowtimeId(seat.getId(), showtime.getId()))
+            if (ticketRepository.existsBySeatIdAndShowtimeId(seat.getId(), showtime.getId())) {
+                log.warn("Seat {} Already Booked!", seat.getId());
                 throw new SeatAlreadyBookedException("Seat is Occupied, choose another!");
+            }
 
             Ticket ticket = buildTicket(seat, showtime, purchase);
             price += ticket.getUnitPrice();
@@ -65,6 +67,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setUser(getLoggedUser());
         var savedPurchase = purchaseRepository.save(purchase);
 
+        log.info("Purchase {} started for user {}", savedPurchase.getId(), getLoggedUser().getUsername());
         return new PurchaseResponse(savedPurchase.getId(), savedPurchase.getPrice(), PENDING, tickets.stream().map(
                 ticket -> new TicketResponse(ticket.getId(),
                         ticket.getUnitPrice(),
@@ -108,6 +111,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         purchaseRepository.save(purchase);
 
+        log.info("Purchase {} Cancelled!", purchaseId);
         return "Purchase Cancelled!";
     }
 
@@ -118,6 +122,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         );
 
         if (purchase.getStatus() == PurchaseStatus.CANCELLED) {
+            log.warn("Purchase {} is already cancelled and cant be completed anymore!", purchaseId);
             throw new BadRequestException("Purchase is already cancelled");
         }
 
@@ -125,6 +130,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         purchaseRepository.save(purchase);
 
+        log.info("Purchase {} Confirmed!", purchaseId);
         return new PurchaseResponse(purchase.getId(), purchase.getPrice(), COMPLETED, purchase.getTickets().stream().map(
                 ticket -> new TicketResponse(ticket.getId(),
                         ticket.getUnitPrice(),
