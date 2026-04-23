@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                         }
                 )
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers(POST, "/cinema/v1/auth/login").permitAll()
                         .requestMatchers(POST, "/cinema/v1/users").permitAll()
                         .requestMatchers("/user/**").hasRole("ADMIN")
