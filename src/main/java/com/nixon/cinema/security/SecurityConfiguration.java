@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers(POST, "/cinema/v1/auth/login").permitAll()
+                        .requestMatchers(POST, "/cinema/v1/auth/**").permitAll()
                         .requestMatchers(POST, "/cinema/v1/users").permitAll()
                         .requestMatchers("/user/**").hasRole("ADMIN")
                         .requestMatchers(POST, "/cinema/v1/showtimes").hasAnyRole("ADMIN", "MANAGER")
@@ -56,6 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/cinema/v1/rooms").hasAnyRole("ADMIN")
                         .requestMatchers(
                                 "/v3/api-docs",
+                                "/h2-console/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**"
                         ).permitAll()

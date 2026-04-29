@@ -1,8 +1,8 @@
 package com.nixon.cinema.service;
 
+import com.nixon.cinema.dto.request.RefreshTokenAuthRequest;
+import com.nixon.cinema.dto.response.TokenResponse;
 import com.nixon.cinema.model.RefreshToken;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatusCode;
 
 public interface RefreshTokenService {
 
@@ -10,7 +10,7 @@ public interface RefreshTokenService {
 
     boolean isTokenExpired(RefreshToken refreshToken);
 
-    String generateNewToken(String refreshToken);
+    TokenResponse generateNewToken(RefreshTokenAuthRequest request);
 
-    String logout(String refreshToken);
+    String logout(RefreshTokenAuthRequest request);
 }

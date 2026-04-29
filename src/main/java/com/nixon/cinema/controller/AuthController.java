@@ -1,16 +1,11 @@
 package com.nixon.cinema.controller;
 
 import com.nixon.cinema.dto.request.AuthenticationRequest;
+import com.nixon.cinema.dto.request.RefreshTokenAuthRequest;
 import com.nixon.cinema.dto.response.TokenResponse;
-import com.nixon.cinema.exceptions.BadRequestException;
-import com.nixon.cinema.exceptions.handler.StandardErrorResponse;
 import com.nixon.cinema.service.AuthenticationService;
 import com.nixon.cinema.service.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +39,13 @@ public class AuthController {
             description = "Create a new RefreshToken"
     )
     @PostMapping("/refresh")
-    ResponseEntity<?> generateNewRefreshToken(@Valid @RequestBody String refreshToken) {
-        return new ResponseEntity<>(refreshTokenService.generateNewToken(refreshToken), HttpStatus.OK);
+    ResponseEntity<?> generateNewRefreshToken(@Valid @RequestBody RefreshTokenAuthRequest request) {
+        return new ResponseEntity<>(refreshTokenService.generateNewToken(request), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    ResponseEntity<?> logout(@Valid @RequestBody String refreshToken) {
-        return new ResponseEntity<>(refreshTokenService.logout(refreshToken), HttpStatus.OK);
+    ResponseEntity<?> logout(@Valid @RequestBody RefreshTokenAuthRequest request) {
+        return new ResponseEntity<>(refreshTokenService.logout(request), HttpStatus.OK);
     }
 
 

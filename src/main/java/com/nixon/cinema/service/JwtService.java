@@ -15,6 +15,5 @@ public interface JwtService {
 
     Long extractUserId(String token);
 
-    SimpleGrantedAuthority extractAuthorities(String token);
 
 }

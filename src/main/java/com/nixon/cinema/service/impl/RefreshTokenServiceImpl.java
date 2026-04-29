@@ -1,5 +1,8 @@
 package com.nixon.cinema.service.impl;
 
+import com.nixon.cinema.dto.request.RefreshTokenAuthRequest;
+import com.nixon.cinema.dto.response.TokenResponse;
+import com.nixon.cinema.exceptions.BadRequestException;
 import com.nixon.cinema.exceptions.EntityNotFoundException;
 import com.nixon.cinema.model.RefreshToken;
 import com.nixon.cinema.repository.RefreshTokenRepository;
@@ -38,27 +41,30 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public String generateNewToken(String refreshToken) {
-        var requestToken = refreshTokenRepository.findByToken(refreshToken).orElseThrow(
+    public TokenResponse generateNewToken(RefreshTokenAuthRequest request) {
+        var requestToken = refreshTokenRepository.findByToken(request.refreshToken()).orElseThrow(
                 () -> new EntityNotFoundException("RefreshToken not found!")
         );
 
+        if (isTokenExpired(requestToken)) {
+            refreshTokenRepository.delete(requestToken);
+            throw new BadRequestException("Token is expired!");
+        }
 
         var user = requestToken.getUser();
-        refreshTokenRepository.delete(requestToken);
 
         var token = jwtService.generateToken(user);
 
-        return "JWT Token : " + token;
+        return new TokenResponse(token, request.refreshToken());
     }
 
     @Override
-    public String logout(String refreshToken) {
-        var token = refreshTokenRepository.findByToken(refreshToken).orElseThrow(
+    public String logout(RefreshTokenAuthRequest request) {
+        var token = refreshTokenRepository.findByToken(request.refreshToken()).orElseThrow(
                 () -> new EntityNotFoundException("RefreshToken not found!")
         );
 
         refreshTokenRepository.delete(token);
-        return "";
+        return "Logout";
     }
 }

@@ -8,7 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +34,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public SimpleGrantedAuthority extractAuthorities(String token) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public String generateToken(User user) {
         log.info("Generating token for user: {}", user.getUsername());
         Date expiresAt = new Date(System.currentTimeMillis() + expirationTime);
@@ -47,7 +41,6 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(user.getUsername())
                 .claims()
-                .add("role", user.getAuthorities())
                 .add("uId", user.getId()).and()
                 .issuedAt(new Date())
                 .expiration(expiresAt)
