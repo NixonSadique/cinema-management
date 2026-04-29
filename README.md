@@ -2,8 +2,23 @@
 
 ## Introduction
 
-REST API for management of a Cinema.
-> Examples include user management,authentication, showtime management and much more.
+A robust backend service designed to handle movie theater operations.  
+This system handles the entire lifecycle of a movie theater—from administrative movie exhibition setup and physical room
+configuration to a seamless ticket purchasing flow for end-users.
+
+### Key Features
+
+* **Movie & Showtime Management:** Complete CRUD operations for movie catalogs and dynamic scheduling of showtimes
+  across multiple theater rooms.
+* **Capacity & Seat Control:** Setup different room configurations (2D, 3D, IMAX, etc.) with automated seat generation
+  based on rows and room capacity.
+* **Purchase Flow:** Multi-step booking system that manages seat assignments and ticket states (
+  `PENDING`, `CONFIRMED`, `CANCELLED`).
+* **Role-Based Access Control:**
+    * **Public:** Access to active showtimes and user registration.
+    * **User:** Browse active showtimes, manage profile, and purchase tickets.
+    * **Manager:** Management of movies and showtime schedules.
+    * **Admin:** Full system control, including room configuration and user promotion.
 
 ## Technologies
 
