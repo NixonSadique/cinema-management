@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Configuration;
                         "<ul>" +
                         "<li>Movie exhibition management</li>" +
                         "<li>Capacity management</li>" +
-                        "<li>tickets purchases, etc<l/i>" +
+                        "<li>tickets purchases, etc</li>" +
                         "</ul> ",
                 title = "Cinema Management",
-                version = "V0.9.9",
+                version = "V1.0.0",
                 contact = @Contact(
                         name = "Nixon Sadique",
                         email = "nixonsadique2005@gmail.com"

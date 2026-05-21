@@ -1,0 +1,2 @@
+INSERT IGNORE INTO tb_user (username, password, email, phone, first_name, last_name, role)
+VALUES ('admin', '$2a$10$TKamfnL6mCnd6IjbBcs6YuaKX.pVQVhVNGLgBNgdsze8N6Lq016Q.', 'admin', '+258840000001', 'admin', 'admin', 'ADMIN');

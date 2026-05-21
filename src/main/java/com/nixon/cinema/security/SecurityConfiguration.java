@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/cinema/v1/movies").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(POST, "/cinema/v1/rooms").hasAnyRole("ADMIN")
                         .requestMatchers(
+                                "/",
                                 "/v3/api-docs",
                                 "/h2-console/**",
                                 "/v3/api-docs/**",
