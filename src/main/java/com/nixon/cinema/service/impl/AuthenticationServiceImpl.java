@@ -8,6 +8,7 @@ import com.nixon.cinema.repository.UserRepository;
 import com.nixon.cinema.service.AuthenticationService;
 import com.nixon.cinema.service.JwtService;
 import com.nixon.cinema.service.RefreshTokenService;
+import com.nixon.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final UserService userService;
 
     @Override
     public TokenResponse login(AuthenticationRequest request) {
