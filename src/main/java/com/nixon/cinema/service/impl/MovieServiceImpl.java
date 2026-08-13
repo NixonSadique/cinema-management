@@ -7,6 +7,9 @@ import com.nixon.cinema.model.Movie;
 import com.nixon.cinema.repository.MovieRepository;
 import com.nixon.cinema.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
 
     @Override
+    @CacheEvict(value = "movie", allEntries = true)
     public String createMovie(MovieCreationRequest request) {
 
         if (movieRepository.findByTitleIgnoreCase(request.title()).isPresent()) {
@@ -39,6 +43,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Cacheable(value = "movie")
     public List<MovieResponse> getAllMovies() {
         return movieRepository.findAll().stream().map(
                 movie -> new MovieResponse(movie.getId(), movie.getTitle(),

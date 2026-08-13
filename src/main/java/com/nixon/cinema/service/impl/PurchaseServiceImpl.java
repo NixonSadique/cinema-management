@@ -69,8 +69,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         log.info("Purchase {} started for user {}", savedPurchase.getId(), getLoggedUser().getUsername());
         return new PurchaseResponse(savedPurchase.getId(), savedPurchase.getPrice(), PENDING, tickets.stream().map(
-                ticket -> new TicketResponse(ticket.getId(),
-                        ticket.getUnitPrice(),
+                ticket -> new TicketResponse(ticket,
                         ticket.getSeat().getSeatRow() + ticket.getSeat().getSeatNumber())
         ).toList());
     }

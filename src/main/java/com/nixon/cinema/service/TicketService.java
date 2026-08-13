@@ -14,7 +14,4 @@ public interface TicketService {
 
     TicketResponse getTicketById(Long ticketId);
 
-    List<TicketResponse> getAllTicketsByDate(LocalDate date);
-
-
 }

@@ -9,4 +9,9 @@ public class HomeController {
     public String redirectToDocumentation() {
         return "redirect:/swagger-ui/index.html";
     }
+
+    @GetMapping("/google")
+    public String redirectToGoogleOAuth() {
+        return "redirect:/oauth2/authorization/google";
+    }
 }

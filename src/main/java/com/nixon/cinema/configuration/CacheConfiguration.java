@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
@@ -17,9 +16,15 @@ public class CacheConfiguration {
 
     @Bean
     RedisCacheConfiguration redisCacheConfiguration(ObjectMapper mapper) {
+        GenericJacksonJsonRedisSerializer serializer = GenericJacksonJsonRedisSerializer.builder()
+                .enableUnsafeDefaultTyping()
+                .typePropertyName("@class")
+                .build();
+
+
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofDays(7))
                 .disableCachingNullValues()
-                .serializeValuesWith(SerializationPair.fromSerializer(new GenericJacksonJsonRedisSerializer(mapper)));//unfinished
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
 }
