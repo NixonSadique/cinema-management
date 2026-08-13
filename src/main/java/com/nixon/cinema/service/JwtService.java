@@ -1,8 +1,6 @@
 package com.nixon.cinema.service;
 
-import com.nixon.cinema.dto.response.TokenResponse;
 import com.nixon.cinema.model.User;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {

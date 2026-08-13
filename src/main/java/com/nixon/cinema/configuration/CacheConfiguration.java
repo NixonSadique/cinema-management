@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import tools.jackson.databind.DefaultTyping;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.time.Duration;
 
@@ -16,10 +18,16 @@ public class CacheConfiguration {
 
     @Bean
     RedisCacheConfiguration redisCacheConfiguration(ObjectMapper mapper) {
-        GenericJacksonJsonRedisSerializer serializer = GenericJacksonJsonRedisSerializer.builder()
-                .enableUnsafeDefaultTyping()
-                .typePropertyName("@class")
+        var validator = BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType("com.nixon.cinema.")
+                .allowIfSubType("java.util.")
                 .build();
+
+        ObjectMapper cacheMapper = mapper.rebuild()
+                .activateDefaultTypingAsProperty(validator, DefaultTyping.NON_FINAL, "@class")
+                .build();
+
+        GenericJacksonJsonRedisSerializer serializer = new GenericJacksonJsonRedisSerializer(cacheMapper);
 
 
         return RedisCacheConfiguration.defaultCacheConfig()

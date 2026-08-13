@@ -2,7 +2,6 @@ package com.nixon.cinema.service;
 
 import com.nixon.cinema.dto.response.TicketResponse;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface TicketService {

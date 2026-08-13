@@ -228,7 +228,7 @@ class PurchaseServiceImplTest {
 
         assertNotNull(response);
         assertEquals(1L, response.purchaseId());
-        assertEquals("A1", response.tickets().get(0).seat());
+        assertEquals("A1", response.tickets().getFirst().seat());
         assertEquals(100.0, response.price());
         assertEquals(COMPLETED, response.status());
         assertEquals(1, response.tickets().size());

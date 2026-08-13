@@ -9,7 +9,6 @@ import com.nixon.cinema.service.OAuthAuthenticationService;
 import com.nixon.cinema.service.RefreshTokenService;
 import com.nixon.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class OAuthAuthenticationServiceImpl implements OAuthAuthenticationServic
         }
 
         assert name != null;
-        userService.createUser(new UserRequest(name.replaceAll(" ", "").toLowerCase(),
+        userService.createUser(new UserRequest(name.replace(" ", "").toLowerCase(),
                 new Random().doubles().toString(),
                 name,
                 familyName,

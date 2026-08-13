@@ -2,7 +2,6 @@ package com.nixon.cinema.dto.response;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 
 public record MovieResponse(
         Long id,

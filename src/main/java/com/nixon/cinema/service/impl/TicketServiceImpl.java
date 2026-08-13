@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketResponse> getTicketByPurchaseId(Long purchaseId) {
         return ticketRepository.findByPurchaseId(purchaseId).stream().map(
                 TicketServiceImpl::response
-        ).toList();
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -36,7 +37,7 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketResponse> getTicketBySeatIdAndShowtimeId(Long seatId, Long showtimeId) {
         return ticketRepository.findBySeatIdAndShowtimeId(seatId, showtimeId).stream().map(
                 TicketServiceImpl::response
-        ).toList();
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketResponse> getAllTickets() {
         return ticketRepository.findAll().stream().map(
                 TicketServiceImpl::response
-        ).toList();
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

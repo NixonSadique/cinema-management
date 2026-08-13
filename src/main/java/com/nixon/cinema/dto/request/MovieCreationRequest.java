@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 
 public record MovieCreationRequest(
         @NotBlank String title,

@@ -8,11 +8,12 @@ import com.nixon.cinema.repository.MovieRepository;
 import com.nixon.cinema.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,8 +49,11 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findAll().stream().map(
                 movie -> new MovieResponse(movie.getId(), movie.getTitle(),
                         movie.getDescription(), movie.getAgeRating(), movie.getDuration(),
-                        movie.getProduction(), movie.getDirector(), movie.getMainCast(), movie.getReleaseDate()
+                        new ArrayList<>(movie.getProduction()),
+                        new ArrayList<>(movie.getDirector()),
+                        new ArrayList<>(movie.getMainCast()),
+                        movie.getReleaseDate()
                 )
-        ).toList();
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 }

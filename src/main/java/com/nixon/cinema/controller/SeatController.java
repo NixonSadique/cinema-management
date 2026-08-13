@@ -23,7 +23,7 @@ public class SeatController {
             description = "Get all seats in a room."
     )
     @GetMapping("/seats/{roomId}")
-    ResponseEntity<List<SeatResponse>> getSeatsByRoom(@RequestParam Long roomId) {
+    ResponseEntity<List<SeatResponse>> getSeatsByRoom(@PathVariable @RequestParam Long roomId) {
         return ResponseEntity.ok(service.getAllSeatsByRoomId(roomId));
     }
 
